@@ -1,4 +1,4 @@
-package com.example.klutter
+package uk.winckle.klutter
 
 import io.flutter.embedding.android.FlutterActivity
 
