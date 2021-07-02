@@ -73,9 +73,15 @@ class _LibraryGridState extends State<LibraryGrid> {
                   maxCrossAxisExtent: 150, mainAxisExtent: 200),
               controller: _scrollController,
               itemBuilder: (context, index) {
-                return index >= state.series.length
-                    ? BottomLoader()
-                    : SeriesCard(state.series.elementAt(index));
+                if (index >= state.series.length) {
+                  if (state.end != true) {
+                    return BottomLoader();
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                } else {
+                  return SeriesCard(state.series.elementAt(index));
+                }
               });
         } else {
           return Container();

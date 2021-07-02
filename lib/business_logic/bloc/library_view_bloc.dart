@@ -38,14 +38,22 @@ class LibraryViewBloc extends Bloc<LibraryViewEvent, LibraryViewState> {
       PageSeriesDto currentPage =
           await _repository.getSeriesFromLibraries(page: page);
       results += currentPage.content!;
+      if (currentPage.last == true) {
+        end = true;
+      }
       yield LibraryViewLoaded(results, end: end);
     }
     if (event is LibraryViewMore) {
-      page++;
-      PageSeriesDto currentPage =
-          await _repository.getSeriesFromLibraries(page: page);
-      results += currentPage.content!;
-      yield LibraryViewLoaded(results, end: end);
+      if (!end) {
+        page++;
+        PageSeriesDto currentPage =
+            await _repository.getSeriesFromLibraries(page: page);
+        if (currentPage.last == true) {
+          end = true;
+        }
+        results += currentPage.content!;
+        yield LibraryViewLoaded(results, end: end);
+      }
     }
   }
 }
