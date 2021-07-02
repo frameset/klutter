@@ -25,6 +25,7 @@ class ReaderBloc extends Bloc<ReaderEvent, ReaderState> {
       yield ReaderPageReady(
           currentPage, await _readerRepository.getPageImage(currentPage));
       //now start caching pages around the initial page
+      _readerRepository.updateReadPage(currentPage);
       _readerRepository.cacheAround(currentPage);
     } else if (event is ReaderGoToNextPage) {
       if (currentPage == book.media.pagesCount) {
@@ -35,7 +36,7 @@ class ReaderBloc extends Bloc<ReaderEvent, ReaderState> {
         currentPage++;
         List<int> image = await _readerRepository.getPageImage(currentPage);
         yield ReaderPageReady(currentPage, image);
-        _readerRepository.updateReadPage(currentPage);
+        await _readerRepository.updateReadPage(currentPage);
         _readerRepository.cacheAround(currentPage);
       }
     } else if (event is ReaderGoToPrevPage) {
@@ -48,6 +49,7 @@ class ReaderBloc extends Bloc<ReaderEvent, ReaderState> {
         currentPage--;
         yield ReaderPageReady(
             currentPage, await _readerRepository.getPageImage(currentPage));
+        await _readerRepository.updateReadPage(currentPage);
         _readerRepository.cacheAround(currentPage);
       }
     } else if (event is ReaderGoToPage) {
@@ -55,6 +57,7 @@ class ReaderBloc extends Bloc<ReaderEvent, ReaderState> {
       currentPage = event.pageNumber;
       yield ReaderPageReady(
           currentPage, await _readerRepository.getPageImage(currentPage));
+      await _readerRepository.updateReadPage(currentPage);
       _readerRepository.cacheAround(currentPage);
     } else if (event is ReaderGoNextbook) {
       yield ReaderLoading(currentPage);
