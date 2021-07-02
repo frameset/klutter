@@ -21,7 +21,7 @@ class ServerPickerDrawer extends StatelessWidget {
         ListTile(
           leading: Icon(Icons.web),
           title: Text("Klutter GitHub"),
-          onTap: () => _launchBrowser("http://github.com/frameset"),
+          onTap: () => _launchBrowser("http://github.com/frameset/klutter"),
         ),
         Divider(),
         KlutterAboutListTile()
