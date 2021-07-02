@@ -20,17 +20,20 @@ class _LibraryScreenState extends State<LibraryScreen> {
     final LibraryDto? library =
         ModalRoute.of(context)!.settings.arguments as LibraryDto?;
 
-    return Scaffold(
-      drawer: ServerDrawer(),
-      appBar: AppBar(
-        title: Text(library?.name ?? "Libraries"),
-        actions: [KlutterSearchButton()],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: BlocProvider(
-          create: (context) => LibraryViewBloc(),
-          child: LibraryGrid(),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        drawer: ServerDrawer(),
+        appBar: AppBar(
+          title: Text(library?.name ?? "Libraries"),
+          actions: [KlutterSearchButton()],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: BlocProvider(
+            create: (context) => LibraryViewBloc(),
+            child: LibraryGrid(),
+          ),
         ),
       ),
     );
