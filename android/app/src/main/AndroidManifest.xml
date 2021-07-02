@@ -8,7 +8,6 @@
     <intent>
       <action android:name="android.intent.action.VIEW" />
       <data android:scheme="https" />
-      <data android:scheme="http" />
     </intent>
   </queries>
   <application android:name="io.flutter.app.FlutterApplication" android:label="klutter" android:icon="@mipmap/ic_launcher">
