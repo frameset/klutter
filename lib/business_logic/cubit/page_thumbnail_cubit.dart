@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:klutter/data/models/bookdto.dart';
@@ -31,11 +29,4 @@ class PageThumbnailCubit extends Cubit<PageThumbnailState> {
       }
     }
   }
-
-  // @override
-  // void onChange(Change<PageThumbnailState> change) {
-  //   // TODO: implement onChange
-  //   super.onChange(change);
-  //   print(change);
-  // }
 }

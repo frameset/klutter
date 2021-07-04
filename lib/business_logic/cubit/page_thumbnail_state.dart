@@ -19,13 +19,4 @@ class PageThumbnailLoaded extends PageThumbnailState {
 
   @override
   List<Object> get props => [pages, thumbMap, mapSize];
-  // List<Object> get props {
-  //   print(thumbMap.keys.toList().toString());
-  //   return [
-  //     pages,
-  //     thumbMap.keys.isEmpty
-  //         ? 0
-  //         : thumbMap.keys.toList().reduce((value, element) => value + element)
-  //   ];
-  // }
 }

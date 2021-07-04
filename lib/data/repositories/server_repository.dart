@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:klutter/data/dataproviders/client/api_client.dart';
 import 'package:klutter/data/dataproviders/client/user_controller.dart';
 import 'package:klutter/data/models/server.dart';
-import 'package:klutter/data/repositories/server_check_repository.dart';
 import 'dart:convert';
 import 'package:uuid/uuid.dart';
 
@@ -38,7 +38,8 @@ class ServerRepository {
   Future<void> setCurrentServer(Server server) async {
     String serverString = jsonEncode(server.toJson());
     await storage.delete(key: 'Current Server');
-    return await storage.write(key: 'Current Server', value: serverString);
+    await storage.write(key: 'Current Server', value: serverString);
+    await ApiClient.init();
   }
 
   Future<bool> testServer(Server server) async {
@@ -54,4 +55,8 @@ class ServerRepository {
       return false;
     }
   }
+}
+
+String genBasicAuthHeaderValue(String user, String pass) {
+  return 'Basic ' + base64Encode(utf8.encode('$user:$pass'));
 }

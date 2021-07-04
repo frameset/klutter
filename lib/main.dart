@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:klutter/data/dataproviders/client/api_client.dart';
 import 'package:klutter/presentation/screens/book_screen.dart';
 import 'package:klutter/presentation/screens/library_screen.dart';
 import 'package:klutter/presentation/screens/reader.dart';
@@ -7,6 +8,7 @@ import 'package:klutter/presentation/screens/server_picker.dart';
 import 'presentation/screens/server_home.dart';
 
 void main() {
+  ApiClient();
   runApp(MyApp());
 }
 

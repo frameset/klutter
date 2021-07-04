@@ -1,34 +1,30 @@
-import 'package:klutter/data/dataproviders/client/book_controller.dart';
-import 'package:klutter/data/dataproviders/client/series_controller.dart';
+import 'package:klutter/data/dataproviders/client/api_client.dart';
 import 'package:klutter/data/models/bookdto.dart';
 import 'package:klutter/data/models/pagebookdto.dart';
 import 'package:klutter/data/models/readprogressupdatedto.dart';
 import 'package:klutter/data/models/seriesdto.dart';
-import 'package:klutter/util/dio_helper.dart';
 
 class BookScreenRepository {
   // final SeriesController seriesClient = SeriesController(configuredDio());
   // final BookController bookClient = BookController(configuredDio());
   final BookDto book;
   BookScreenRepository(this.book);
+  ApiClient apiClient = ApiClient();
 
   Future<List<int>> getBookThumb() async {
-    final BookController bookClient = await getBookController();
-    return await bookClient.getThumbnail(book.id);
+    return await apiClient.bookController.getThumbnail(book.id);
   }
 
   Future<SeriesDto> getSeries() async {
-    SeriesController seriesClient = await getSeriesController();
-    SeriesDto series = await seriesClient.getSeriesById(book.seriesId);
+    SeriesDto series =
+        await apiClient.seriesController.getSeriesById(book.seriesId);
     return series;
   }
 
   Future<BookDto?> getPreviousBook() async {
     late BookDto prevbook;
     try {
-      final BookController bookClient = await getBookController();
-
-      prevbook = await bookClient.getPreviousBook(book.id);
+      prevbook = await apiClient.bookController.getPreviousBook(book.id);
     } on Exception catch (_) {
       return null;
     }
@@ -38,9 +34,7 @@ class BookScreenRepository {
   Future<BookDto?> getNextBook() async {
     late BookDto nextbook;
     try {
-      final BookController bookClient = await getBookController();
-
-      nextbook = await bookClient.getNextBook(book.id);
+      nextbook = await apiClient.bookController.getNextBook(book.id);
     } on Exception catch (_) {
       return null;
     }
@@ -48,10 +42,8 @@ class BookScreenRepository {
   }
 
   Future<List<BookDto>> getBooksInSeries() async {
-    SeriesController seriesClient = await getSeriesController();
-
-    PageBookDto seriesBooks =
-        await seriesClient.getBooksFromSeries(book.seriesId, unpaged: true);
+    PageBookDto seriesBooks = await apiClient.seriesController
+        .getBooksFromSeries(book.seriesId, unpaged: true);
     if (seriesBooks.numberOfElements == 0) {
       return List.empty();
     } else {
@@ -60,27 +52,19 @@ class BookScreenRepository {
   }
 
   Future<void> markAsRead() async {
-    final BookController bookClient = await getBookController();
-
-    await bookClient.markAsRead(
-        book.id, ReadProgressUpdateDto(completed: true));
+    await apiClient.bookController
+        .markAsRead(book.id, ReadProgressUpdateDto(completed: true));
   }
 
   Future<void> markAsUnread() async {
-    final BookController bookClient = await getBookController();
-
-    bookClient.deleteReadProgress(book.id);
+    apiClient.bookController.deleteReadProgress(book.id);
   }
 
   Future<void> analyse() async {
-    final BookController bookClient = await getBookController();
-
-    bookClient.analyzeBook(book.id);
+    apiClient.bookController.analyzeBook(book.id);
   }
 
   Future<void> refreshMetadata() async {
-    final BookController bookClient = await getBookController();
-
-    bookClient.refreshMetadata(book.id);
+    apiClient.bookController.refreshMetadata(book.id);
   }
 }
