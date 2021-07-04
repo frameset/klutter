@@ -1,6 +1,4 @@
 import 'package:klutter/data/dataproviders/client/api_client.dart';
-import 'package:klutter/data/dataproviders/client/book_controller.dart';
-import 'package:klutter/data/dataproviders/client/series_controller.dart';
 import 'package:klutter/data/models/bookdto.dart';
 import 'package:klutter/data/models/pagebookdto.dart';
 import 'package:klutter/data/models/pageseriesdto.dart';
