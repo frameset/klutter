@@ -21,7 +21,7 @@ Future<Dio> _configuredDio() async {
     'Authorization': genBasicAuthHeaderValue(server.username, server.password)
   }))
     ..interceptors.add(DioCacheInterceptor(options: cacheOptions));
-  // _dio.interceptors.add(PrettyDioLogger(request: true, responseBody: false));
+  _dio.interceptors.add(PrettyDioLogger(request: true, responseBody: false));
   return _dio;
 }
 
