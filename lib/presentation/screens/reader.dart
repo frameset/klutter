@@ -84,6 +84,7 @@ class _ReaderState extends State<Reader> {
                           return AnimatedSwitcher(
                             duration: Duration(milliseconds: 500),
                             child: PhotoView(
+                                key: ValueKey<int>(state.pageNumber),
                                 loadingBuilder: (context, widgetchunkevent) {
                                   return Center(
                                       child: CircularProgressIndicator());
