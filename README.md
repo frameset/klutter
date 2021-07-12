@@ -10,18 +10,18 @@ This is a project in its early stages. There will be bugs, things may break. iOS
 
 ## Currently implemented features:
 
-* Infinite scroll list of library series
+* Paginated views of Libraries, Series, Collections
 * Recently Read, On Deck et al on home page
 * Search for books and series
 * Reader with zoom support
 
 ## Not yet implemented, but planned
 
-* Collections
 * Readlists
 * Library view filtering
 * Caching to improve browsing speed
 * Availability on Play store
+* Dark mode
 
 ## Not planned for implementation
 

@@ -7,6 +7,8 @@ import 'dart:convert';
 import 'package:uuid/uuid.dart';
 
 class ServerRepository {
+  IOSOptions iosOptions =
+      IOSOptions(accessibility: IOSAccessibility.first_unlock);
   final storage = FlutterSecureStorage();
   Uuid uuid = Uuid();
 
@@ -28,7 +30,11 @@ class ServerRepository {
 
   Future<void> addServer(Server server) async {
     String serverString = jsonEncode(server.toJson());
-    return await storage.write(key: server.key, value: serverString);
+    return await storage.write(
+      key: server.key,
+      value: serverString,
+      iOptions: iosOptions,
+    );
   }
 
   Future<void> removeServer(String key) async {

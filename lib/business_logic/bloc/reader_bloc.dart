@@ -31,7 +31,10 @@ class ReaderBloc extends Bloc<ReaderEvent, ReaderState> {
       if (currentPage == book.media.pagesCount) {
         yield ReaderReachedEnd(await _readerRepository.getNextBook());
       } else {
-        yield ReaderLoading(currentPage);
+        if (!_readerRepository.pageMap.containsKey(currentPage)) {
+          print("you are here");
+          yield ReaderLoading(currentPage);
+        }
 
         currentPage++;
         List<int> image = await _readerRepository.getPageImage(currentPage);

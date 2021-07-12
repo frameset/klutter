@@ -19,10 +19,10 @@ class LibraryViewLoading extends LibraryViewState {
 }
 
 class LibraryViewLoaded extends LibraryViewState {
-  final List<SeriesDto> series;
+  final PageSeriesDto seriesPage;
   final bool? end;
-  LibraryViewLoaded(this.series, {this.end});
+  LibraryViewLoaded(this.seriesPage, {this.end});
 
   @override
-  List<Object> get props => [series];
+  List<Object> get props => [seriesPage];
 }

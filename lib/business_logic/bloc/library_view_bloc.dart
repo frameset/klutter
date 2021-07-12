@@ -12,48 +12,26 @@ part 'library_view_state.dart';
 
 class LibraryViewBloc extends Bloc<LibraryViewEvent, LibraryViewState> {
   LibraryDto? library;
-  int page = 0;
-  bool end = false;
-  List<SeriesDto> results = List.empty();
   LibraryRepository _repository = LibraryRepository();
   LibraryViewBloc({this.library}) : super(LibraryViewInitial());
 
-  @override
-  Stream<Transition<LibraryViewEvent, LibraryViewState>> transformEvents(
-    Stream<LibraryViewEvent> events,
-    TransitionFunction<LibraryViewEvent, LibraryViewState> transitionFn,
-  ) {
-    return super.transformEvents(
-        events.debounceTime(Duration(milliseconds: 200)), transitionFn);
-  }
+  // @override
+  // Stream<Transition<LibraryViewEvent, LibraryViewState>> transformEvents(
+  //   Stream<LibraryViewEvent> events,
+  //   TransitionFunction<LibraryViewEvent, LibraryViewState> transitionFn,
+  // ) {
+  //   return super.transformEvents(
+  //       events.debounceTime(Duration(milliseconds: 200)), transitionFn);
+  // }
 
   @override
   Stream<LibraryViewState> mapEventToState(
     LibraryViewEvent event,
   ) async* {
     if (event is LibraryViewLoad) {
-      library = event.library;
-      List<SeriesDto> results = List.empty();
-      page = 0;
-      PageSeriesDto currentPage =
-          await _repository.getSeriesFromLibraries(page: page);
-      results += currentPage.content!;
-      if (currentPage.last == true) {
-        end = true;
-      }
-      yield LibraryViewLoaded(results, end: end);
-    }
-    if (event is LibraryViewMore) {
-      if (!end) {
-        page++;
-        PageSeriesDto currentPage =
-            await _repository.getSeriesFromLibraries(page: page);
-        if (currentPage.last == true) {
-          end = true;
-        }
-        results += currentPage.content!;
-        yield LibraryViewLoaded(results, end: end);
-      }
+      PageSeriesDto seriesPage = await _repository.getSeriesFromLibraries(
+          page: event.page, library: library);
+      yield LibraryViewLoaded(seriesPage);
     }
   }
 }

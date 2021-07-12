@@ -56,7 +56,6 @@ class _ServerDrawerState extends State<ServerDrawer> {
                       children: state.libraries
                           .map((e) => ListTile(
                                 leading: Icon(null),
-                                // selected: true,
                                 selected: currentLibrary?.id == e.id,
                                 title: Text(
                                   e.name,
@@ -65,12 +64,6 @@ class _ServerDrawerState extends State<ServerDrawer> {
                                 onTap: () => Navigator.pushReplacementNamed(
                                     context, LibraryScreen.routeName,
                                     arguments: e),
-                                // trailing: IconButton(
-                                //   icon: Icon(Icons.more_vert),
-                                //   onPressed: () {
-                                //     //TODO implement refresh etc
-                                //   },
-                                // ),
                               ))
                           .toList());
                 }

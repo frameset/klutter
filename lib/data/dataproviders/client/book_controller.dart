@@ -46,7 +46,7 @@ abstract class BookController {
   @GET("/api/v1/books/{bookId}/pages")
   Future<List<PageDto>> getPages(@Path("bookId") String bookId);
 
-  @Headers(<String, String>{"accept": "image/*"})
+  @Headers(<String, String>{"accept": "*/*"})
   @GET("/api/v1/books/{bookId}/pages/{pageNumber}")
   @DioResponseType(ResponseType.bytes)
   Future<List<int>> getPage(

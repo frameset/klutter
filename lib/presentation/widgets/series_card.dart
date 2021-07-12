@@ -1,22 +1,22 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:klutter/business_logic/cubit/series_thumbnail_cubit.dart';
+import 'package:klutter/data/dataproviders/client/api_client.dart';
 import 'package:klutter/data/models/seriesdto.dart';
 import 'package:klutter/presentation/screens/series_screen.dart';
 
 class SeriesCard extends StatelessWidget {
   final SeriesDto series;
-  final SeriesThumbnailCubit seriesThumbnailCubit;
+  final ApiClient apiClient = ApiClient();
 
-  SeriesCard(this.series)
-      : seriesThumbnailCubit = SeriesThumbnailCubit(series) {
-    seriesThumbnailCubit.getThumbnail();
-  }
+  SeriesCard(this.series);
 
   @override
   Widget build(BuildContext context) {
+    String thumburl =
+        apiClient.dio.options.baseUrl + "/api/v1/series/${series.id}/thumbnail";
+    Map<String, String> header = {
+      "Authorization": apiClient.dio.options.headers["Authorization"]
+    };
+
     return SizedBox(
       height: 200.0,
       width: 125.0,
@@ -35,32 +35,14 @@ class SeriesCard extends StatelessWidget {
                   children: <Widget>[
                     SizedBox(
                       height: 125.0,
-                      //width: 100.0,
-                      child: BlocBuilder<SeriesThumbnailCubit,
-                          SeriesThumbnailState>(
-                        bloc: seriesThumbnailCubit,
-                        builder: (context, state) {
-                          if (state is SeriesThumbnailInitial ||
-                              state is SeriesThumbnailLoading) {
-                            return Image.asset("assets/images/cover.png");
-                          } else if (state is SeriesThumbnailReady) {
-                            return Image.memory(
-                              Uint8List.fromList(state.thumbnail),
-                              fit: BoxFit.contain,
-                            );
-                          } else {
-                            return Icon(
-                              Icons.error,
-                              color: Colors.red,
-                            );
-                          }
-                        },
-                      )
-                      //  Image.memory(
-                      //   Uint8List.fromList(thumb),
-                      //   fit: BoxFit.contain,
-                      // ),
-                      ,
+                      child: FadeInImage(
+                        fit: BoxFit.contain,
+                        image: NetworkImage(
+                          thumburl,
+                          headers: header,
+                        ),
+                        placeholder: AssetImage("assets/images/cover.png"),
+                      ),
                     ),
                     Positioned(
                       top: 0.0,
@@ -90,14 +72,6 @@ class SeriesCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Spacer(),
-                // Container(
-                //   alignment: Alignment.bottomLeft,
-                //   child: Text(
-                //     '${series.series.booksCount} Books',
-                //     style: TextStyle(color: Colors.grey),
-                //   ),
-                // )
               ],
             ),
           ),

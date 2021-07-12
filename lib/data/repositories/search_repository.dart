@@ -32,6 +32,10 @@ class SearchRepository {
     } else {
       seriesResults = pageSeriesResults.content!;
     }
-    return SearchResults(bookResults, seriesResults);
+
+    return SearchResults(
+      bookResults: bookResults,
+      seriesResults: seriesResults,
+    );
   }
 }

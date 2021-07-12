@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klutter/business_logic/cubit/page_thumbnail_cubit.dart';
 import 'package:klutter/data/models/bookdto.dart';
 import 'package:klutter/presentation/screens/book_screen.dart';
+import 'package:klutter/presentation/widgets/page_thumbnail.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:fullscreen/fullscreen.dart';
 
@@ -81,20 +82,13 @@ class _ReaderState extends State<Reader> {
                             color: Colors.red,
                           ));
                         } else if (state is ReaderPageReady) {
-                          return AnimatedSwitcher(
-                            duration: Duration(milliseconds: 500),
-                            child: PhotoView(
-                                key: ValueKey<int>(state.pageNumber),
-                                loadingBuilder: (context, widgetchunkevent) {
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                },
-                                minScale: PhotoViewComputedScale.contained,
-                                gaplessPlayback: true,
-                                enableRotation: false,
-                                imageProvider: MemoryImage(
-                                    Uint8List.fromList(state.pageImage))),
-                          );
+                          return PhotoView(
+                              key: ValueKey<int>(state.pageNumber),
+                              minScale: PhotoViewComputedScale.contained,
+                              gaplessPlayback: true,
+                              enableRotation: false,
+                              imageProvider: MemoryImage(
+                                  Uint8List.fromList(state.pageImage)));
                         } else {
                           return Center(
                             child: Icon(
@@ -157,8 +151,9 @@ class _ReaderState extends State<Reader> {
                                     icon: Icon(
                                       Icons.arrow_back,
                                     ),
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(true),
+                                    onPressed: () => Navigator.of(context)
+                                        .popAndPushNamed(BookScreen.routeName,
+                                            arguments: currentbook),
                                   ),
                                   Expanded(
                                     child: Text(
@@ -175,7 +170,8 @@ class _ReaderState extends State<Reader> {
                                           return BlocProvider.value(
                                             value: pageThumbnailCubit!
                                               ..getPageThumbnails(),
-                                            child: PageThumbnailGridDialog(),
+                                            child: PageThumbnailGridDialog(
+                                                book: currentbook),
                                           );
                                         },
                                       ).then((value) => context
@@ -269,7 +265,9 @@ class _ReaderState extends State<Reader> {
 }
 
 class PageThumbnailGridDialog extends StatelessWidget {
+  final BookDto book;
   const PageThumbnailGridDialog({
+    required this.book,
     Key? key,
   }) : super(key: key);
 
@@ -295,11 +293,10 @@ class PageThumbnailGridDialog extends StatelessWidget {
                           child: GestureDetector(
                             onTap: () => Navigator.pop(
                                 context, state.pages[index].number),
-                            child: state.thumbMap
-                                    .containsKey(state.pages[index].number)
-                                ? Image.memory(Uint8List.fromList(
-                                    state.thumbMap[state.pages[index].number]!))
-                                : Image.asset("assets/images/cover.png"),
+                            child: PageThumbnail(
+                              book: book,
+                              page: state.pages[index],
+                            ),
                           ),
                         ),
                         Expanded(

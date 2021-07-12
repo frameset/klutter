@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:klutter/business_logic/cubit/series_books_cubit.dart';
+import 'package:klutter/business_logic/bloc/series_books_bloc.dart';
 import 'package:klutter/business_logic/cubit/series_info_cubit.dart';
 import 'package:klutter/data/models/seriesdto.dart';
 import 'package:klutter/presentation/widgets/book_card.dart';
@@ -25,47 +25,40 @@ class _SeriesScreenState extends State<SeriesScreen> {
     final SeriesDto series =
         ModalRoute.of(context)!.settings.arguments as SeriesDto;
     return MultiBlocProvider(
-        providers: [
-          BlocProvider<SeriesThumbnailCubit>(
-            create: (context) => SeriesThumbnailCubit(series)..getThumbnail(),
-          ),
-          BlocProvider<SeriesInfoCubit>(
-              lazy: false,
-              create: (context) => SeriesInfoCubit(series)..getSeriesInfo()),
-          BlocProvider(
-              create: (context) => SeriesBooksCubit(series)..getBookPage(0))
-        ],
+      providers: [
+        BlocProvider<SeriesThumbnailCubit>(
+          create: (context) => SeriesThumbnailCubit(series)..getThumbnail(),
+        ),
+        BlocProvider<SeriesInfoCubit>(
+            lazy: false,
+            create: (context) => SeriesInfoCubit(series)..getSeriesInfo()),
+        BlocProvider(
+            create: (context) =>
+                SeriesBooksBloc(series)..add(SeriesBooksGetPage(0)))
+      ],
+      child: DefaultTabController(
+        length: 2,
         child: Scaffold(
           appBar: AppBar(
             actions: [KlutterSearchButton()],
             title: Text("Series: " + series.metadata.title),
+            bottom: TabBar(
+              tabs: [
+                Tab(
+                  text: "Info",
+                ),
+                Tab(text: "Books"),
+              ],
+              automaticIndicatorColorAdjustment: true,
+            ),
           ),
-          bottomNavigationBar: BottomNavigationBar(
-              onTap: (index) => _onTap(index),
-              currentIndex: selectedTabIndex,
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  label: "Info",
-                  icon: Icon(Icons.info_outline),
-                  activeIcon: Icon(Icons.info),
-                ),
-                BottomNavigationBarItem(
-                  label: "Books",
-                  icon: Icon(Icons.library_books_outlined),
-                  activeIcon: Icon(Icons.library_books),
-                ),
-              ]),
-          body: <Widget>[
+          body: TabBarView(children: [
             InfoTab(series: series),
             BooksTab(),
-          ].elementAt(selectedTabIndex),
-        ));
-  }
-
-  void _onTap(int index) {
-    setState(() {
-      selectedTabIndex = index;
-    });
+          ]),
+        ),
+      ),
+    );
   }
 }
 
@@ -206,77 +199,86 @@ class InfoTab extends StatelessWidget {
 }
 
 class BooksTab extends StatelessWidget {
-  const BooksTab({
-    Key? key,
-  }) : super(key: key);
+  const BooksTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SeriesBooksCubit, SeriesBooksState>(
-        builder: (context, state) {
-      if (state is SeriesBooksReady) {
-        if (state.page.totalPages == 1) {
-          return GridView.builder(
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 199.0),
-              itemCount: state.page.numberOfElements,
-              itemBuilder: (context, index) {
-                return BookCard(state.page.content!.elementAt(index));
-              });
-        } else {
+    return BlocBuilder<SeriesBooksBloc, SeriesBooksState>(
+      builder: (context, state) {
+        if (state is SeriesBooksInitial) {
+          return Container();
+        } else if (state is SeriesBooksLoading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is SeriesBooksReady) {
           return Column(
             children: [
-              Expanded(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: state.page.totalPages,
-                    itemBuilder: (context, i) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ConstrainedBox(
-                          constraints:
-                              BoxConstraints(minHeight: 30, minWidth: 30),
-                          child: ElevatedButton(
-                            child: Text(
-                              (i + 1).toString(),
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .button!
-                                  .copyWith(color: Color(Colors.white.value)),
+              state.page.totalPages == 1
+                  ? SizedBox.shrink()
+                  : Expanded(
+                      flex: 15,
+                      child: Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              onPressed: state.page.first!
+                                  ? null
+                                  : () => context.read<SeriesBooksBloc>().add(
+                                      SeriesBooksGetPage(
+                                          state.page.number! - 1)),
+                              icon: Icon(Icons.chevron_left),
                             ),
-                            onPressed: () =>
-                                context.read<SeriesBooksCubit>().getBookPage(i),
-                          ),
+                            Text("Go to Page "),
+                            DropdownButton(
+                                onChanged: (value) {
+                                  if (value as int != state.page.number) {
+                                    context
+                                        .read<SeriesBooksBloc>()
+                                        .add(SeriesBooksGetPage(value));
+                                  }
+                                },
+                                value: state.page.number,
+                                items: Iterable<int>.generate(
+                                        state.page.totalPages!)
+                                    .map<DropdownMenuItem<int>>((e) =>
+                                        DropdownMenuItem<int>(
+                                            value: e,
+                                            child: Text((e + 1).toString())))
+                                    .toList()),
+                            IconButton(
+                              onPressed: state.page.last!
+                                  ? null
+                                  : () => context.read<SeriesBooksBloc>().add(
+                                      SeriesBooksGetPage(
+                                          state.page.number! + 1)),
+                              icon: Icon(Icons.chevron_right),
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  ),
-                ),
-              ),
+                      ),
+                    ),
               Expanded(
-                flex: 9,
-                child: GridView.builder(
-                    shrinkWrap: true,
-                    itemCount: state.page.numberOfElements,
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 190, mainAxisExtent: 200),
-                    itemBuilder: (context, index) {
-                      return BookCard(state.page.content!.elementAt(index));
-                    }),
-              )
+                  flex: 85,
+                  child: GridView.builder(
+                      itemCount: state.page.numberOfElements,
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          mainAxisExtent: 200, maxCrossAxisExtent: 150),
+                      itemBuilder: (context, index) {
+                        return BookCard(state.page.content!.elementAt(index));
+                      }))
             ],
           );
+        } else {
+          return Center(
+            child: Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+          );
         }
-      } else {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-    });
+      },
+    );
   }
 }

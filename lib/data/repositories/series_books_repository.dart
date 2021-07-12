@@ -10,7 +10,7 @@ class SeriesBooksRepository {
 
   Future<PageBookDto> getPageBook(int pageNumber) async {
     PageBookDto pageBook = await apiClient.seriesController
-        .getBooksFromSeries(series.id, page: pageNumber);
+        .getBooksFromSeries(series.id, page: pageNumber, size: 50);
     return pageBook;
   }
 }

@@ -12,11 +12,9 @@ class PageThumbnailInitial extends PageThumbnailState {}
 class PageThumbnailFailed extends PageThumbnailState {}
 
 class PageThumbnailLoaded extends PageThumbnailState {
-  final Map<int, dynamic> thumbMap;
   final List<PageDto> pages;
-  final int mapSize;
-  PageThumbnailLoaded(this.pages, this.thumbMap, this.mapSize);
+  PageThumbnailLoaded(this.pages);
 
   @override
-  List<Object> get props => [pages, thumbMap, mapSize];
+  List<Object> get props => [pages];
 }
