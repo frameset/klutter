@@ -187,9 +187,11 @@ class InfoTab extends StatelessWidget {
                                       series.metadata.genres
                                           .map((e) => Chip(label: Text(e)))
                                           .toList())),
-                      Text("Summary from book " +
-                          series.booksMetadata.summaryNumber.toString() +
-                          ":"),
+                      series.booksMetadata.summary == ''
+                          ? SizedBox.shrink()
+                          : Text("Summary from book " +
+                              series.booksMetadata.summaryNumber.toString() +
+                              ":"),
                       Divider(),
                       Text(
                         series.booksMetadata.summary,
