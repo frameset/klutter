@@ -112,7 +112,7 @@ class _AddServerDialogState extends State<AddServerDialog> {
               children: [
                 TextFormField(
                   onChanged: (value) => serverName = value,
-                  keyboardType: TextInputType.emailAddress,
+                  keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                       icon: Icon(Icons.star),
                       labelText: 'Server Nickname',
@@ -144,6 +144,7 @@ class _AddServerDialogState extends State<AddServerDialog> {
                       }
                     }),
                 TextFormField(
+                  keyboardType: TextInputType.emailAddress,
                   onChanged: (value) => username = value,
                   decoration: InputDecoration(
                       icon: Icon(Icons.person),
@@ -178,12 +179,11 @@ class _AddServerDialogState extends State<AddServerDialog> {
                 ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        BlocProvider.of<ServerCubit>(context)
-                          ..addNewServer(
-                              serverName: serverName.trim(),
-                              url: url.replaceAll(RegExp(r"\/+$"), ''),
-                              username: username,
-                              password: password);
+                        BlocProvider.of<ServerCubit>(context).addNewServer(
+                            serverName: serverName.trim(),
+                            url: url.replaceAll(RegExp(r"\/+$"), ''),
+                            username: username,
+                            password: password);
                         Navigator.pop(context);
                       }
                     },
