@@ -11,14 +11,14 @@ class BookscreenNavbarCubit extends Cubit<BookscreenNavbarState> {
   final BookScreenRepository repository;
   BookscreenNavbarCubit(this.repository) : super(BookscreenNavbarInitial());
 
-  Future<void> getSeriesMenu() async {
-    try {
-      booksInSeries ??= await repository.getBooksInSeries();
-      emit(BookscreenNavbarMenuReady(booksInSeries!));
-    } on Exception catch (e) {
-      print(e);
-    }
-  }
+  // Future<void> getSeriesMenu() async {
+  //   try {
+  //     booksInSeries ??= await repository.getBooksInSeries();
+  //     emit(BookscreenNavbarMenuReady(booksInSeries!));
+  //   } on Exception catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   Future<void> tryGoNext() async {
     try {
@@ -29,7 +29,7 @@ class BookscreenNavbarCubit extends Cubit<BookscreenNavbarState> {
     } on Exception catch (e) {
       print(e);
       emit(BookscreenNoNextBook());
-      getSeriesMenu();
+      // getSeriesMenu();
     }
   }
 
@@ -42,7 +42,7 @@ class BookscreenNavbarCubit extends Cubit<BookscreenNavbarState> {
     } on Exception catch (e) {
       print(e);
       emit(BookscreenNoPrevBook());
-      getSeriesMenu();
+      // getSeriesMenu();
     }
   }
 }

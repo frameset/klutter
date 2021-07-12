@@ -41,6 +41,10 @@ class BookScreenRepository {
     return nextbook;
   }
 
+  Future<BookDto> getCurrentBook() async {
+    return await apiClient.bookController.getBook(book.id);
+  }
+
   Future<List<BookDto>> getBooksInSeries() async {
     PageBookDto seriesBooks = await apiClient.seriesController
         .getBooksFromSeries(book.seriesId, unpaged: true);

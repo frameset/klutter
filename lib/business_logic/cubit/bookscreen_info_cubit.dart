@@ -11,19 +11,16 @@ class BookscreenInfoCubit extends Cubit<BookscreenInfoState> {
   BookscreenInfoCubit(this._repository) : super(BookscreenInfoInitial());
 
   Future<void> getInfo() async {
-    BookDto? previousBook;
-    BookDto? nextBook;
     SeriesDto series = await _repository.getSeries();
-    previousBook = await _repository.getPreviousBook();
-
-    nextBook = await _repository.getNextBook();
-    List<BookDto> booksInSeries = await _repository.getBooksInSeries();
     List<int> thumb = await _repository.getBookThumb();
-    emit(BookscreenInfoReady(
-        booksInSeries: booksInSeries,
-        series: series,
-        thumb: thumb,
-        nextBook: nextBook,
-        previousBook: previousBook));
+    BookDto currentbook = await _repository.getCurrentBook();
+
+    emit(
+      BookscreenInfoReady(
+          // booksInSeries: booksInSeries,
+          series: series,
+          thumb: thumb,
+          currentbook: currentbook),
+    );
   }
 }

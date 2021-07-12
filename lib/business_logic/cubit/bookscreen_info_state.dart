@@ -4,24 +4,27 @@ abstract class BookscreenInfoState extends Equatable {
   const BookscreenInfoState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class BookscreenInfoInitial extends BookscreenInfoState {}
 
 class BookscreenInfoReady extends BookscreenInfoState {
   final SeriesDto series;
+  final BookDto currentbook;
   final BookDto? nextBook;
   final BookDto? previousBook;
-  final List<BookDto> booksInSeries;
+  final List<BookDto>? booksInSeries;
   final List<int> thumb;
   BookscreenInfoReady(
       {required this.series,
+      required this.currentbook,
       this.nextBook,
       this.previousBook,
-      required this.booksInSeries,
+      this.booksInSeries,
       required this.thumb});
 
   @override
-  List<Object> get props => [series, booksInSeries];
+  List<Object?> get props =>
+      [series, currentbook, nextBook, previousBook, booksInSeries, thumb];
 }

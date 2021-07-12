@@ -9,13 +9,13 @@ abstract class BookscreenNavbarState extends Equatable {
 
 class BookscreenNavbarInitial extends BookscreenNavbarState {}
 
-class BookscreenNavbarMenuReady extends BookscreenNavbarState {
-  final List<BookDto> booksInSeries;
-  BookscreenNavbarMenuReady(this.booksInSeries);
+// class BookscreenNavbarMenuReady extends BookscreenNavbarState {
+//   final List<BookDto> booksInSeries;
+//   BookscreenNavbarMenuReady(this.booksInSeries);
 
-  @override
-  List<Object> get props => [booksInSeries];
-}
+//   @override
+//   List<Object> get props => [booksInSeries];
+// }
 
 class BookscreenGoNextBook extends BookscreenNavbarState {
   final BookDto nextbook;

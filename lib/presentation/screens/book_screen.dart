@@ -35,9 +35,9 @@ class _BookScreenState extends State<BookScreen> {
                       BookscreenInfoCubit(context.read<BookScreenRepository>())
                         ..getInfo()),
               BlocProvider(
-                  create: (context) => BookscreenNavbarCubit(
-                      context.read<BookScreenRepository>())
-                    ..getSeriesMenu()),
+                create: (context) =>
+                    BookscreenNavbarCubit(context.read<BookScreenRepository>()),
+              ),
               BlocProvider(
                 create: (context) => BookScreenMoreMenuCubit(
                     context.read<BookScreenRepository>()),
@@ -57,7 +57,7 @@ class _BookScreenState extends State<BookScreen> {
                       );
                     },
                   ),
-                  BlocConsumer<BookscreenNavbarCubit, BookscreenNavbarState>(
+                  BlocListener<BookscreenNavbarCubit, BookscreenNavbarState>(
                     listener: (context, state) {
                       if (state is BookscreenNoNextBook) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -72,36 +72,6 @@ class _BookScreenState extends State<BookScreen> {
                       } else if (state is BookscreenGoPrevBook) {
                         Navigator.popAndPushNamed(context, BookScreen.routeName,
                             arguments: state.prevbook);
-                      }
-                    },
-                    builder: (context, state) {
-                      if (state is BookscreenNavbarMenuReady) {
-                        return PopupMenuButton(
-                          icon: Icon(Icons.menu),
-                          onSelected: (BookDto chosenbook) {
-                            Navigator.pushReplacementNamed(
-                                context, BookScreen.routeName,
-                                arguments: chosenbook);
-                          },
-                          initialValue: currentbook,
-                          itemBuilder: (BuildContext context) =>
-                              state.booksInSeries
-                                  .map((book) => PopupMenuItem(
-                                        value: book,
-                                        child: Text(book.metadata.number +
-                                            " - " +
-                                            book.metadata.title),
-                                      ))
-                                  .toList(),
-                        );
-                      } else {
-                        return IconButton(
-                          icon: Icon(
-                            Icons.menu,
-                            color: Colors.grey,
-                          ),
-                          onPressed: () {},
-                        );
                       }
                     },
                   ),
@@ -128,56 +98,22 @@ class _BookScreenState extends State<BookScreen> {
                         children: [
                           Expanded(
                             flex: 4,
-                            child: Container(
-                              margin: EdgeInsets.zero,
-                              child: Card(
-                                child: ConstrainedBox(
-                                  constraints: BoxConstraints(maxHeight: 200),
-                                  child: Stack(
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.topCenter,
-                                        child: Center(child: BlocBuilder<
-                                            BookscreenInfoCubit,
-                                            BookscreenInfoState>(
-                                          builder: (context, state) {
-                                            if (state
-                                                is BookscreenInfoInitial) {
-                                              return Image.asset(
-                                                  "assets/images/cover.png");
-                                            } else if (state
-                                                is BookscreenInfoReady) {
-                                              return Image.memory(
-                                                  Uint8List.fromList(
-                                                      state.thumb));
-                                            } else
-                                              return Container();
-                                          },
-                                        )),
-                                      ),
-                                      if (currentbook.readProgress != null &&
-                                          currentbook.readProgress?.completed !=
-                                              true)
-                                        Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: ReadProgressBar(
-                                                book: currentbook)),
-                                      Visibility(
-                                        visible:
-                                            currentbook.readProgress == null,
-                                        child: Container(
-                                          decoration:
-                                              const RotatedCornerDecoration(
-                                            color: Colors.orange,
-                                            geometry: const BadgeGeometry(
-                                                width: 20, height: 20),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                            child: BlocBuilder<BookscreenInfoCubit,
+                                BookscreenInfoState>(
+                              builder: (context, state) {
+                                if (state is BookscreenInfoInitial) {
+                                  return BookScreenImage(
+                                      key: UniqueKey(),
+                                      currentbook: currentbook);
+                                } else if (state is BookscreenInfoReady) {
+                                  return BookScreenImage(
+                                    key: UniqueKey(),
+                                    currentbook: state.currentbook,
+                                    image: state.thumb,
+                                  );
+                                } else
+                                  return Container();
+                              },
                             ),
                           ),
                           Expanded(
@@ -203,9 +139,16 @@ class _BookScreenState extends State<BookScreen> {
                                                         .textTheme
                                                         .headline6),
                                                 onPressed: () {
-                                                  Navigator.pushNamed(context,
-                                                      SeriesScreen.routeName,
-                                                      arguments: state.series);
+                                                  Navigator.pushNamed(
+                                                          context,
+                                                          SeriesScreen
+                                                              .routeName,
+                                                          arguments:
+                                                              state.series)
+                                                      .then((value) => context
+                                                          .read<
+                                                              BookscreenInfoCubit>()
+                                                          .getInfo());
                                                 },
                                               ),
                                               Divider(),
@@ -295,10 +238,52 @@ class _BookScreenState extends State<BookScreen> {
                 onPressed: () {
                   //enter reading mode
                   Navigator.popAndPushNamed(context, Reader.routeName,
-                      arguments: currentbook);
+                          arguments: currentbook)
+                      .then((value) =>
+                          context.read<BookscreenInfoCubit>().getInfo());
                 },
               ),
             )));
+  }
+}
+
+class BookScreenImage extends StatelessWidget {
+  final List<int>? image;
+  BookScreenImage({
+    Key? key,
+    required this.currentbook,
+    this.image,
+  }) : super(key: key);
+
+  final BookDto currentbook;
+
+  @override
+  Widget build(BuildContext context) {
+    Image cover = null != image
+        ? Image.memory(Uint8List.fromList(image!))
+        : Image.asset("assets/images/cover.png");
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: Container(
+            foregroundDecoration: currentbook.readProgress == null
+                ? const RotatedCornerDecoration(
+                    color: Colors.orange,
+                    geometry: const BadgeGeometry(
+                        width: 20, height: 20, cornerRadius: 0),
+                  )
+                : null,
+            child: cover,
+          ),
+        ),
+        if (currentbook.readProgress != null &&
+            currentbook.readProgress?.completed != true)
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: ReadProgressBar(book: currentbook)),
+      ],
+    );
   }
 }
 
@@ -333,6 +318,7 @@ class MoreMenu extends StatelessWidget {
               Text("Successfully marked as read"),
             ],
           )));
+          context.read<BookscreenInfoCubit>().getInfo();
         } else if (state is BookScreenMoreMenuMarkUnreadFailed) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Row(
@@ -355,6 +341,7 @@ class MoreMenu extends StatelessWidget {
               Text("Successfully marked as unread"),
             ],
           )));
+          context.read<BookscreenInfoCubit>().getInfo();
         }
       },
       child: PopupMenuButton<MoreMenuChoice>(
