@@ -19,9 +19,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Klutter',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          brightness: Brightness.light),
+      themeMode: ThemeMode.system,
+      darkTheme: ThemeData(
+          primarySwatch: Colors.blue,
+          brightness: Brightness.dark,
+          visualDensity: VisualDensity.adaptivePlatformDensity),
       home: ServerPicker(),
       routes: {
         ServerHome.routeName: (context) => ServerHome(),
