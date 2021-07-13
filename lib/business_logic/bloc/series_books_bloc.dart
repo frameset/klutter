@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:klutter/data/models/pagebookdto.dart';
 import 'package:klutter/data/models/seriesdto.dart';
 import 'package:klutter/data/repositories/series_books_repository.dart';
-import 'package:rxdart/rxdart.dart';
+// import 'package:rxdart/rxdart.dart';
 
 part 'series_books_event.dart';
 part 'series_books_state.dart';
