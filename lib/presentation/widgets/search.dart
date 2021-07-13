@@ -58,7 +58,6 @@ class KlutterSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
     if (query.length > 3) {
       searchBloc.add(SearchQuery(query));
       return RepositoryProvider(

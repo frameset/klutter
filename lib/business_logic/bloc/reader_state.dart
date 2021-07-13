@@ -1,11 +1,10 @@
 part of 'reader_bloc.dart';
 
 abstract class ReaderState extends Equatable {
-  int? pageNumber;
   ReaderState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class ReaderInitial extends ReaderState {}
@@ -13,11 +12,11 @@ class ReaderInitial extends ReaderState {}
 class ReaderFailed extends ReaderState {}
 
 class ReaderLoading extends ReaderState {
-  final int pageNumber;
+  final int? pageNumber;
   ReaderLoading(this.pageNumber);
 
   @override
-  List<Object> get props => [pageNumber];
+  List<Object?> get props => [pageNumber];
 }
 
 class ReaderPageReady extends ReaderState {
