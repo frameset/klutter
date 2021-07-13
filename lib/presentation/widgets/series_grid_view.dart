@@ -20,40 +20,44 @@ class SeriesGridView extends StatelessWidget {
             ? SizedBox.shrink()
             : Expanded(
                 flex: 15,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: ButtonBar(
+                  alignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    IconButton(
+                    OutlinedButton(
                       onPressed: state.seriesPage.first!
                           ? null
                           : () => context
                               .read<SeriesListCubit>()
                               .getSeriesPage(state.seriesPage.number! - 1),
-                      icon: Icon(Icons.chevron_left),
+                      child: Icon(Icons.chevron_left),
                     ),
-                    Text("Page "),
-                    DropdownButton(
-                      isDense: true,
-                      onChanged: (value) {
-                        BlocProvider.of<SeriesListCubit>(context)
-                            .getSeriesPage(value as int);
-                      },
-                      value: state.seriesPage.number,
-                      items:
-                          Iterable<int>.generate(state.seriesPage.totalPages!)
+                    Row(
+                      children: [
+                        Text("Page "),
+                        DropdownButton(
+                          isDense: true,
+                          onChanged: (value) {
+                            BlocProvider.of<SeriesListCubit>(context)
+                                .getSeriesPage(value as int);
+                          },
+                          value: state.seriesPage.number,
+                          items: Iterable<int>.generate(
+                                  state.seriesPage.totalPages!)
                               .map<DropdownMenuItem<int>>((e) =>
                                   DropdownMenuItem<int>(
                                       value: e,
                                       child: Text((e + 1).toString())))
                               .toList(),
+                        ),
+                      ],
                     ),
-                    IconButton(
+                    OutlinedButton(
                       onPressed: state.seriesPage.last!
                           ? null
                           : () => context
                               .read<SeriesListCubit>()
                               .getSeriesPage(state.seriesPage.number! + 1),
-                      icon: Icon(Icons.chevron_right),
+                      child: Icon(Icons.chevron_right),
                     )
                   ],
                 ),

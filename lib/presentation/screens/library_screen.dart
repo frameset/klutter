@@ -116,56 +116,73 @@ class CollectionGrid extends StatelessWidget {
           );
         } else if (state is CollectionsListReady) {
           return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               state.collectionsPage.totalPages == 1
                   ? SizedBox.shrink()
                   : Expanded(
-                      flex: 1,
-                      child: DropdownButton(
-                        value: state.collectionsPage.number!,
-                        onChanged: (value) {
-                          if (value != state.collectionsPage.number!) {
-                            context
-                                .read<CollectionsListCubit>()
-                                .getCollectionPage((value as int));
-                          }
-                        },
-                        items: Iterable<int>.generate(
-                                state.collectionsPage.totalPages!)
-                            .map<DropdownMenuItem<int>>(
-                                (e) => DropdownMenuItem<int>(
-                                      child: Text((e + 1).toString()),
-                                      value: e,
-                                    ))
-                            .toList(),
+                      flex: 15,
+                      child: ButtonBar(
+                        alignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          OutlinedButton(
+                            onPressed: state.collectionsPage.first!
+                                ? null
+                                : () => context
+                                    .read<CollectionsListCubit>()
+                                    .getCollectionPage(
+                                        state.collectionsPage.number! - 1),
+                            child: Icon(Icons.chevron_left),
+                          ),
+                          Row(
+                            children: [
+                              Text("Page "),
+                              DropdownButton(
+                                isDense: true,
+                                onChanged: (value) {
+                                  BlocProvider.of<CollectionsListCubit>(context)
+                                      .getCollectionPage(value as int);
+                                },
+                                value: state.collectionsPage.number,
+                                items: Iterable<int>.generate(
+                                        state.collectionsPage.totalPages!)
+                                    .map<DropdownMenuItem<int>>((e) =>
+                                        DropdownMenuItem<int>(
+                                            value: e,
+                                            child: Text((e + 1).toString())))
+                                    .toList(),
+                              ),
+                            ],
+                          ),
+                          OutlinedButton(
+                            onPressed: state.collectionsPage.last!
+                                ? null
+                                : () => context
+                                    .read<CollectionsListCubit>()
+                                    .getCollectionPage(
+                                        state.collectionsPage.number! + 1),
+                            child: Icon(Icons.chevron_right),
+                          )
+                        ],
                       ),
                     ),
               Expanded(
-                flex: 9,
+                flex: 85,
                 child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      mainAxisExtent: 200,
-                      maxCrossAxisExtent: 150,
-                    ),
-                    itemCount: state.collectionsPage.content!.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () => Navigator.pushNamed(
-                            context, CollectionScreen.routeName,
-                            arguments: state.collectionsPage.content!
-                                .elementAt(index)),
-                        child: CollectionCard(
-                          collection:
-                              state.collectionsPage.content!.elementAt(index),
-                          thumb: state.thumbMap[state.collectionsPage.content!
-                              .elementAt(index)
-                              .id],
-                        ),
-                      );
-                    }),
-              )
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    mainAxisExtent: 200,
+                    maxCrossAxisExtent: 150,
+                  ),
+                  itemCount: state.collectionsPage.content!.length,
+                  itemBuilder: (context, index) => GestureDetector(
+                      onTap: () => Navigator.pushNamed(
+                          context, CollectionScreen.routeName,
+                          arguments:
+                              state.collectionsPage.content!.elementAt(index)),
+                      child: CollectionCard(
+                          state.collectionsPage.content!.elementAt(index))),
+                ),
+              ),
             ],
           );
         } else if (state is CollectionsListLoading) {
@@ -201,7 +218,6 @@ class _LibraryGridState extends State<LibraryGrid> {
   void initState() {
     print("Init state");
     super.initState();
-    _scrollController.addListener(_onScroll);
     _libraryViewBloc = context.read<LibraryViewBloc>();
   }
 
@@ -278,17 +294,6 @@ class _LibraryGridState extends State<LibraryGrid> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _onScroll() {
-    if (_isBottom) _libraryViewBloc.add(LibraryViewMore());
-  }
-
-  bool get _isBottom {
-    if (!_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    return currentScroll >= (maxScroll * 0.8);
   }
 }
 

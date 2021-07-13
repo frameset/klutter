@@ -1,31 +1,20 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
+import 'package:klutter/data/dataproviders/client/api_client.dart';
 import 'package:klutter/data/models/collectiondto.dart';
 
 class CollectionCard extends StatelessWidget {
   final CollectionDto collection;
-  final List<int>? thumb;
-  const CollectionCard({
-    Key? key,
-    required this.collection,
-    this.thumb,
-  }) : super(key: key);
+  final ApiClient apiClient = ApiClient();
+  CollectionCard(this.collection);
 
   @override
   Widget build(BuildContext context) {
-    late Image image;
-    if (thumb != null) {
-      image = Image.memory(
-        Uint8List.fromList(thumb!),
-        fit: BoxFit.contain,
-      );
-    } else {
-      image = Image.asset(
-        "assets/images/cover.png",
-        fit: BoxFit.contain,
-      );
-    }
+    String thumburl = apiClient.dio.options.baseUrl +
+        "/api/v1/collections/${collection.id}/thumbnail";
+    Map<String, String> header = {
+      "Authorization": apiClient.dio.options.headers["Authorization"]
+    };
+
     return Card(
       child: SizedBox(
         height: 200,
@@ -36,7 +25,13 @@ class CollectionCard extends StatelessWidget {
           children: [
             Expanded(
               flex: 8,
-              child: image,
+              child: FadeInImage(
+                image: NetworkImage(
+                  thumburl,
+                  headers: header,
+                ),
+                placeholder: AssetImage("assets/images/cover.png"),
+              ),
             ),
             Expanded(
               flex: 2,

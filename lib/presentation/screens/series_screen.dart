@@ -220,40 +220,45 @@ class BooksTab extends StatelessWidget {
                       flex: 15,
                       child: Container(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            IconButton(
+                            OutlinedButton(
                               onPressed: state.page.first!
                                   ? null
                                   : () => context.read<SeriesBooksBloc>().add(
                                       SeriesBooksGetPage(
                                           state.page.number! - 1)),
-                              icon: Icon(Icons.chevron_left),
+                              child: Icon(Icons.chevron_left),
                             ),
-                            Text("Go to Page "),
-                            DropdownButton(
-                                onChanged: (value) {
-                                  if (value as int != state.page.number) {
-                                    context
-                                        .read<SeriesBooksBloc>()
-                                        .add(SeriesBooksGetPage(value));
-                                  }
-                                },
-                                value: state.page.number,
-                                items: Iterable<int>.generate(
-                                        state.page.totalPages!)
-                                    .map<DropdownMenuItem<int>>((e) =>
-                                        DropdownMenuItem<int>(
-                                            value: e,
-                                            child: Text((e + 1).toString())))
-                                    .toList()),
-                            IconButton(
+                            ButtonBar(
+                              children: [
+                                Text("Go to Page "),
+                                DropdownButton(
+                                    onChanged: (value) {
+                                      if (value as int != state.page.number) {
+                                        context
+                                            .read<SeriesBooksBloc>()
+                                            .add(SeriesBooksGetPage(value));
+                                      }
+                                    },
+                                    value: state.page.number,
+                                    items: Iterable<int>.generate(
+                                            state.page.totalPages!)
+                                        .map<DropdownMenuItem<int>>((e) =>
+                                            DropdownMenuItem<int>(
+                                                value: e,
+                                                child:
+                                                    Text((e + 1).toString())))
+                                        .toList()),
+                              ],
+                            ),
+                            OutlinedButton(
                               onPressed: state.page.last!
                                   ? null
                                   : () => context.read<SeriesBooksBloc>().add(
                                       SeriesBooksGetPage(
                                           state.page.number! + 1)),
-                              icon: Icon(Icons.chevron_right),
+                              child: Icon(Icons.chevron_right),
                             ),
                           ],
                         ),
