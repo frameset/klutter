@@ -22,11 +22,13 @@ class _ReaderState extends State<Reader> {
   bool menuVisible = false;
   int currentSliderValue = 2;
   PageThumbnailCubit? pageThumbnailCubit;
+  late PhotoViewScaleStateController scaleController;
 
   @override
   void initState() {
     super.initState();
     _enterFullscreen();
+    scaleController = PhotoViewScaleStateController();
   }
 
   @override
@@ -82,8 +84,13 @@ class _ReaderState extends State<Reader> {
                             color: Colors.red,
                           ));
                         } else if (state is ReaderPageReady) {
+                          scaleController.scaleState =
+                              PhotoViewScaleState.initial;
                           return PhotoView(
-                              key: ValueKey<int>(state.pageNumber),
+                              scaleStateController: scaleController,
+
+                              // key: ValueKey<int>(state.pageNumber),
+                              initialScale: PhotoViewComputedScale.contained,
                               minScale: PhotoViewComputedScale.contained,
                               gaplessPlayback: true,
                               enableRotation: false,
@@ -253,6 +260,7 @@ class _ReaderState extends State<Reader> {
   void dispose() {
     super.dispose();
     _exitFullscreen();
+    scaleController.dispose();
   }
 
   _enterFullscreen() async {
