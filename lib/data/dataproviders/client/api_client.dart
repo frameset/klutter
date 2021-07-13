@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
+// import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+// import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:klutter/data/dataproviders/client/book_controller.dart';
 import 'package:klutter/data/dataproviders/client/library_controller.dart';
@@ -11,7 +11,7 @@ import 'package:klutter/data/dataproviders/client/series_collection_controller.d
 import 'package:klutter/data/dataproviders/client/series_controller.dart';
 import 'package:klutter/data/models/server.dart';
 // import 'package:prettydio_logger/prettydio_logger.dart';
-import 'package:path_provider/path_provider.dart' as pp;
+// import 'package:path_provider/path_provider.dart' as pp;
 
 class ApiClient {
   static ApiClient? _apiClient;
@@ -36,13 +36,13 @@ class ApiClient {
         await storage.read(key: "Current Server") as String;
     final Server server = Server.fromJson(jsonDecode(serverString));
 
-    final Directory dir = await pp.getApplicationDocumentsDirectory();
-    final cacheOptions = CacheOptions(
-        // hitCacheOnErrorExcept: [],
-        allowPostMethod: false,
-        // store: HiveCacheStore(dir.path),
-        store: MemCacheStore(),
-        policy: CachePolicy.request);
+    // final Directory dir = await pp.getApplicationDocumentsDirectory();
+    // final cacheOptions = CacheOptions(
+    //     // hitCacheOnErrorExcept: [],
+    //     allowPostMethod: false,
+    //     // store: HiveCacheStore(dir.path),
+    //     store: MemCacheStore(),
+    //     policy: CachePolicy.request);
     _apiClient!.dio = Dio(
       BaseOptions(
         baseUrl: server.url,
