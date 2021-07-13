@@ -151,7 +151,8 @@ class _ReaderState extends State<Reader> {
                         children: [
                           Expanded(
                             child: Container(
-                              color: Colors.white,
+                              color: Theme.of(context).primaryColor,
+                              // decoration: ,
                               child: Row(
                                 children: [
                                   IconButton(
@@ -196,7 +197,7 @@ class _ReaderState extends State<Reader> {
                             flex: 10,
                             child: SizedBox.expand(
                               child: Container(
-                                color: Colors.white,
+                                color: Theme.of(context).primaryColor,
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
