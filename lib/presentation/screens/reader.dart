@@ -109,7 +109,7 @@ class _ReaderState extends State<Reader> {
                   ),
                   Row(children: [
                     Expanded(
-                        flex: 15,
+                        flex: 20,
                         child: Container(
                           child: GestureDetector(
                               behavior: HitTestBehavior.translucent,
@@ -120,18 +120,26 @@ class _ReaderState extends State<Reader> {
                               }),
                         )),
                     Expanded(
-                        flex: 70,
+                        flex: 60,
                         child: Container(
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                menuVisible = !menuVisible;
-                              });
-                            },
+                          child: Column(
+                            children: [
+                              Expanded(child: Container()),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      menuVisible = !menuVisible;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Expanded(child: Container()),
+                            ],
                           ),
                         )),
                     Expanded(
-                      flex: 15,
+                      flex: 20,
                       child: Container(
                         child: GestureDetector(
                           behavior: HitTestBehavior.translucent,
@@ -144,110 +152,113 @@ class _ReaderState extends State<Reader> {
                       ),
                     ),
                   ]),
-                  AnimatedOpacity(
-                      opacity: menuVisible ? 1.0 : 0.0,
-                      duration: Duration(milliseconds: 200),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              color: Theme.of(context).primaryColor,
-                              // decoration: ,
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.arrow_back,
-                                    ),
-                                    onPressed: () => Navigator.of(context)
-                                        .popAndPushNamed(BookScreen.routeName,
-                                            arguments: currentbook),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      currentbook.metadata.title,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.grid_view),
-                                    onPressed: () {
-                                      showDialog<int>(
-                                        context: context,
-                                        builder: (context) {
-                                          return BlocProvider.value(
-                                            value: pageThumbnailCubit!
-                                              ..getPageThumbnails(),
-                                            child: PageThumbnailGridDialog(
-                                                book: currentbook),
-                                          );
-                                        },
-                                      ).then((value) => context
-                                          .read<ReaderBloc>()
-                                          .add(ReaderGoToPage(value!)));
-                                    },
-                                  )
-                                ],
-                              ),
-                            ),
-                            flex: 10,
-                          ),
-                          Expanded(flex: 70, child: Container()),
-                          Expanded(
-                            flex: 10,
-                            child: SizedBox.expand(
+                  IgnorePointer(
+                    ignoring: !menuVisible,
+                    child: AnimatedOpacity(
+                        opacity: menuVisible ? 1.0 : 0.0,
+                        duration: Duration(milliseconds: 200),
+                        child: Column(
+                          children: [
+                            Expanded(
                               child: Container(
                                 color: Theme.of(context).primaryColor,
+                                // decoration: ,
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     IconButton(
-                                        icon: Icon(Icons.skip_previous),
-                                        onPressed: () => context
-                                            .read<ReaderBloc>()
-                                            .add(ReaderGoPreviousBook())),
-                                    //Page slider goes here. (blocbuilder?)
-                                    BlocBuilder<ReaderBloc, ReaderState>(
-                                      builder: (context, state) {
-                                        return Expanded(
-                                          child: Slider(
-                                            value:
-                                                currentSliderValue.toDouble(),
-                                            min: 1,
-                                            max: currentbook.media.pagesCount
-                                                .toDouble(),
-                                            divisions:
-                                                currentbook.media.pagesCount,
-                                            label:
-                                                currentSliderValue.toString(),
-                                            onChanged: (newvalue) {
-                                              setState(() {
-                                                currentSliderValue =
-                                                    newvalue.round();
-                                              });
-                                            },
-                                            onChangeEnd: (newvalue) => context
-                                                .read<ReaderBloc>()
-                                                .add(ReaderGoToPage(
-                                                    newvalue.round())),
-                                          ),
-                                        );
-                                      },
+                                      icon: Icon(
+                                        Icons.arrow_back,
+                                      ),
+                                      onPressed: () => Navigator.of(context)
+                                          .popAndPushNamed(BookScreen.routeName,
+                                              arguments: currentbook),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        currentbook.metadata.title,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.skip_next),
-                                      onPressed: () => context
-                                          .read<ReaderBloc>()
-                                          .add(ReaderGoNextbook()),
+                                      icon: Icon(Icons.grid_view),
+                                      onPressed: () {
+                                        showDialog<int>(
+                                          context: context,
+                                          builder: (context) {
+                                            return BlocProvider.value(
+                                              value: pageThumbnailCubit!
+                                                ..getPageThumbnails(),
+                                              child: PageThumbnailGridDialog(
+                                                  book: currentbook),
+                                            );
+                                          },
+                                        ).then((value) => context
+                                            .read<ReaderBloc>()
+                                            .add(ReaderGoToPage(value!)));
+                                      },
                                     )
                                   ],
                                 ),
                               ),
+                              flex: 10,
                             ),
-                          )
-                        ],
-                      ))
+                            Expanded(flex: 70, child: Container()),
+                            Expanded(
+                              flex: 10,
+                              child: SizedBox.expand(
+                                child: Container(
+                                  color: Theme.of(context).primaryColor,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      IconButton(
+                                          icon: Icon(Icons.skip_previous),
+                                          onPressed: () => context
+                                              .read<ReaderBloc>()
+                                              .add(ReaderGoPreviousBook())),
+                                      //Page slider goes here. (blocbuilder?)
+                                      BlocBuilder<ReaderBloc, ReaderState>(
+                                        builder: (context, state) {
+                                          return Expanded(
+                                            child: Slider(
+                                              value:
+                                                  currentSliderValue.toDouble(),
+                                              min: 1,
+                                              max: currentbook.media.pagesCount
+                                                  .toDouble(),
+                                              divisions:
+                                                  currentbook.media.pagesCount,
+                                              label:
+                                                  currentSliderValue.toString(),
+                                              onChanged: (newvalue) {
+                                                setState(() {
+                                                  currentSliderValue =
+                                                      newvalue.round();
+                                                });
+                                              },
+                                              onChangeEnd: (newvalue) => context
+                                                  .read<ReaderBloc>()
+                                                  .add(ReaderGoToPage(
+                                                      newvalue.round())),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.skip_next),
+                                        onPressed: () => context
+                                            .read<ReaderBloc>()
+                                            .add(ReaderGoNextbook()),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        )),
+                  )
                 ],
               ),
             );
