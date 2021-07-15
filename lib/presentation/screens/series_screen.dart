@@ -9,6 +9,7 @@ import 'package:klutter/data/models/seriesdto.dart';
 import 'package:klutter/presentation/widgets/book_card.dart';
 import 'package:klutter/business_logic/cubit/series_thumbnail_cubit.dart';
 import 'package:klutter/presentation/widgets/search.dart';
+import 'package:sizer/sizer.dart';
 
 class SeriesScreen extends StatefulWidget {
   static const routeName = '/seriesScreen';
@@ -72,127 +73,134 @@ class InfoTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            flex: 4,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  flex: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child:
-                        BlocBuilder<SeriesThumbnailCubit, SeriesThumbnailState>(
-                            builder: (context, state) {
-                      if (state is SeriesThumbnailReady) {
-                        return Image.memory(
-                            Uint8List.fromList(state.thumbnail));
-                      } else {
-                        return Image.asset("assets/images/cover.png");
-                      }
-                    }),
-                  ),
-                ),
-                Expanded(
-                  flex: 6,
-                  child: SingleChildScrollView(
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              flex: 4,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    flex: 4,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        child: BlocBuilder<SeriesThumbnailCubit,
+                            SeriesThumbnailState>(builder: (context, state) {
+                          if (state is SeriesThumbnailReady) {
+                            return Image.memory(
+                              Uint8List.fromList(state.thumbnail),
+                              fit: BoxFit.contain,
+                            );
+                          } else {
+                            return SizedBox.shrink();
+                          }
+                        }),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 6,
+                    child: Padding(
+                      padding: EdgeInsets.all(2.w),
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             series.metadata.title,
-                            style: Theme.of(context).textTheme.headline6,
+                            style: TextStyle(
+                                fontSize: 12.sp, fontWeight: FontWeight.bold),
                           ),
+                          // Divider(),
                           Text(
                             series.booksMetadata.releaseDate?.year.toString() ??
                                 "",
-                            style: Theme.of(context).textTheme.subtitle2,
+                            style: TextStyle(fontSize: 10.sp),
                           ),
-                          Text(series.metadata.publisher),
-                          Text(series.booksCount == 1
-                              ? "1 book"
-                              : series.booksCount.toString() + " books"),
+                          Text(
+                            series.metadata.publisher,
+                            style: TextStyle(fontSize: 10.sp),
+                          ),
+                          Text(
+                            series.booksCount == 1
+                                ? "1 book"
+                                : series.booksCount.toString() + " books",
+                            style: TextStyle(fontSize: 8.sp),
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-          Expanded(
-              flex: 6,
-              child: SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      series.metadata.tags.length == 0
-                          ? SizedBox.shrink()
-                          : SingleChildScrollView(
-                              physics: ClampingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-                                        Text(
-                                          "TAGS",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .button,
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        )
-                                      ] +
-                                      series.metadata.tags
-                                          .map((e) => Chip(label: Text(e)))
-                                          .toList())),
-                      series.metadata.genres.length == 0
-                          ? SizedBox.shrink()
-                          : SingleChildScrollView(
-                              physics: ClampingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-                                        Text(
-                                          "GENRE",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .button,
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        )
-                                      ] +
-                                      series.metadata.genres
-                                          .map((e) => Chip(label: Text(e)))
-                                          .toList())),
-                      series.booksMetadata.summary == ''
-                          ? SizedBox.shrink()
-                          : Text("Summary from book " +
-                              series.booksMetadata.summaryNumber.toString() +
-                              ":"),
-                      Divider(),
-                      Text(
-                        series.booksMetadata.summary,
-                        style: Theme.of(context).textTheme.bodyText1,
-                      )
-                    ]),
-              ))
-        ],
+            Expanded(
+                flex: 6,
+                child: SingleChildScrollView(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        series.metadata.tags.length == 0
+                            ? SizedBox.shrink()
+                            : Wrap(
+                                runSpacing: 1.w,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: <Widget>[
+                                      Text(
+                                        "TAGS",
+                                        style:
+                                            Theme.of(context).textTheme.button,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      )
+                                    ] +
+                                    series.metadata.tags
+                                        .map((e) => Chip(label: Text(e)))
+                                        .toList()),
+                        series.metadata.genres.length == 0
+                            ? SizedBox.shrink()
+                            : Wrap(
+                                runSpacing: 1.w,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: <Widget>[
+                                      Text(
+                                        "GENRE",
+                                        style:
+                                            Theme.of(context).textTheme.button,
+                                      ),
+                                    ] +
+                                    series.metadata.genres
+                                        .map((e) => Chip(
+                                                label: Text(
+                                              e,
+                                              style: TextStyle(fontSize: 8.sp),
+                                            )))
+                                        .toList()),
+                        Divider(),
+                        series.booksMetadata.summary == ''
+                            ? SizedBox.shrink()
+                            : Text(
+                                "Summary from book " +
+                                    series.booksMetadata.summaryNumber
+                                        .toString() +
+                                    ":",
+                                style: TextStyle(fontSize: 9.sp),
+                              ),
+                        Text(
+                          series.booksMetadata.summary,
+                          style: TextStyle(fontSize: 9.sp),
+                        )
+                      ]),
+                ))
+          ],
+        ),
       ),
     );
   }

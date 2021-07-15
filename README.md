@@ -14,6 +14,7 @@ This is a project in its early stages. There will be bugs, things may break. iOS
 * Recently Read, On Deck et al on home page
 * Search for books and series
 * Reader with zoom support
+* Dark mode
 
 ## Not yet implemented, but planned
 
@@ -21,7 +22,6 @@ This is a project in its early stages. There will be bugs, things may break. iOS
 * Library view filtering
 * Caching to improve browsing speed
 * Availability on Play store
-* Dark mode
 
 ## Not planned for implementation
 
@@ -36,4 +36,4 @@ This is a project in its early stages. There will be bugs, things may break. iOS
 
 ## Community
 
-Discuss this project on the official [Komga discord](https://discord.gg/TdRpkDu)
+Discuss this project on the official [Komga discord](https://discord.gg/TdRpkDu) in the 3rd Party Apps channel

@@ -10,6 +10,7 @@ import 'package:klutter/presentation/screens/book_screen.dart';
 import 'package:klutter/presentation/widgets/page_thumbnail.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:fullscreen/fullscreen.dart';
+import 'package:sizer/sizer.dart';
 
 class Reader extends StatefulWidget {
   static const routeName = '/reader';
@@ -177,6 +178,7 @@ class _ReaderState extends State<Reader> {
                                       child: Text(
                                         currentbook.metadata.title,
                                         overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontSize: 10.sp),
                                       ),
                                     ),
                                     IconButton(

@@ -7,6 +7,7 @@ import 'package:klutter/presentation/screens/reader.dart';
 import 'package:klutter/presentation/screens/series_screen.dart';
 import 'package:klutter/presentation/screens/server_picker.dart';
 import 'presentation/screens/server_home.dart';
+import 'package:sizer/sizer.dart';
 
 void main() {
   ApiClient();
@@ -16,30 +17,23 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Klutter',
-      theme: ThemeData.light(),
-      // ThemeData(
-      //     primarySwatch: Colors.blue,
-      //     visualDensity: VisualDensity.adaptivePlatformDensity,
-      //     textTheme: Text,
-      //     brightness: Brightness.light),
-      themeMode: ThemeMode.system,
-      darkTheme: ThemeData.dark(),
-      // ThemeData(
-      //     primarySwatch: Colors.blue,
-      //     brightness: Brightness.dark,
-      //     visualDensity: VisualDensity.adaptivePlatformDensity),
-      home: ServerPicker(),
-      routes: {
-        ServerHome.routeName: (context) => ServerHome(),
-        ServerPicker.routeName: (context) => ServerPicker(),
-        BookScreen.routeName: (context) => BookScreen(),
-        SeriesScreen.routeName: (context) => SeriesScreen(),
-        Reader.routeName: (context) => Reader(),
-        LibraryScreen.routeName: (context) => LibraryScreen(),
-        CollectionScreen.routeName: (context) => CollectionScreen(),
-      },
-    );
+    return Sizer(builder: (context, orientation, devicetype) {
+      return MaterialApp(
+        title: 'Klutter',
+        theme: ThemeData.light(),
+        themeMode: ThemeMode.system,
+        darkTheme: ThemeData.dark(),
+        home: ServerPicker(),
+        routes: {
+          ServerHome.routeName: (context) => ServerHome(),
+          ServerPicker.routeName: (context) => ServerPicker(),
+          BookScreen.routeName: (context) => BookScreen(),
+          SeriesScreen.routeName: (context) => SeriesScreen(),
+          Reader.routeName: (context) => Reader(),
+          LibraryScreen.routeName: (context) => LibraryScreen(),
+          CollectionScreen.routeName: (context) => CollectionScreen(),
+        },
+      );
+    });
   }
 }

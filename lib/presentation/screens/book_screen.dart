@@ -11,6 +11,7 @@ import 'package:klutter/presentation/widgets/book_progress_bar.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sizer/sizer.dart';
 
 class BookScreen extends StatefulWidget {
   static const routeName = '/bookScreen';
@@ -85,153 +86,158 @@ class _BookScreenState extends State<BookScreen> {
                     MoreMenu()
                   ],
                 ),
-                body: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 4,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              flex: 4,
-                              child: BlocBuilder<BookscreenInfoCubit,
-                                  BookscreenInfoState>(
-                                builder: (context, state) {
-                                  if (state is BookscreenInfoInitial) {
-                                    return BookScreenImage(
-                                        key: UniqueKey(),
-                                        currentbook: currentbook);
-                                  } else if (state is BookscreenInfoReady) {
-                                    return BookScreenImage(
-                                      key: UniqueKey(),
-                                      currentbook: state.currentbook,
-                                      image: state.thumb,
-                                    );
-                                  } else
-                                    return Container();
-                                },
-                              ),
-                            ),
-                            Expanded(
-                              flex: 6,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      BlocBuilder<BookscreenInfoCubit,
-                                          BookscreenInfoState>(
-                                        builder: (context, state) {
-                                          if (state is BookscreenInfoReady) {
-                                            return Column(
-                                              children: [
-                                                TextButton(
-                                                  style: TextButton.styleFrom(
-                                                      primary: Colors.blue),
-                                                  child: Text(state.series.name,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline6),
-                                                  onPressed: () {
-                                                    Navigator.pushNamed(
-                                                            context,
-                                                            SeriesScreen
-                                                                .routeName,
-                                                            arguments:
-                                                                state.series)
-                                                        .then((value) => context
-                                                            .read<
-                                                                BookscreenInfoCubit>()
-                                                            .getInfo());
-                                                  },
-                                                ),
-                                                Divider(),
-                                              ],
-                                            );
-                                          } else {
-                                            return SizedBox.shrink();
-                                          }
-                                        },
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        currentbook.metadata.title,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1,
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        '#' + currentbook.metadata.number,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2,
-                                      ),
-                                      currentbook.metadata.releaseDate == null
-                                          ? SizedBox.shrink()
-                                          : Text(
-                                              (DateFormat('yMMMMd').format(
-                                                  currentbook
-                                                      .metadata.releaseDate!)),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .subtitle1,
-                                            ),
-                                    ],
+                body: SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 4,
+                          child: Padding(
+                            padding: EdgeInsets.all(2.w),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: BlocBuilder<BookscreenInfoCubit,
+                                      BookscreenInfoState>(
+                                    builder: (context, state) {
+                                      if (state is BookscreenInfoInitial) {
+                                        return BookScreenImage(
+                                            currentbook: currentbook);
+                                      } else if (state is BookscreenInfoReady) {
+                                        return BookScreenImage(
+                                          currentbook: state.currentbook,
+                                          image: state.thumb,
+                                        );
+                                      } else
+                                        return Container();
+                                    },
                                   ),
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                          flex: 6,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                currentbook.metadata.tags.length == 0
-                                    ? SizedBox.shrink()
-                                    : SingleChildScrollView(
-                                        physics: ClampingScrollPhysics(),
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: <Widget>[
-                                                  Text(
-                                                    "TAGS",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .button,
+                                Expanded(
+                                  flex: 6,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(2.w),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        BlocBuilder<BookscreenInfoCubit,
+                                            BookscreenInfoState>(
+                                          builder: (context, state) {
+                                            if (state is BookscreenInfoReady) {
+                                              return Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  TextButton(
+                                                    style: TextButton.styleFrom(
+                                                        primary: Colors.blue),
+                                                    child: Text(
+                                                      state.series.name,
+                                                      style: TextStyle(
+                                                          fontSize: 12.sp,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                      // style: Theme.of(context)
+                                                      //     .textTheme
+                                                      //     .headline6,
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.pushNamed(
+                                                              context,
+                                                              SeriesScreen
+                                                                  .routeName,
+                                                              arguments:
+                                                                  state.series)
+                                                          .then((value) => context
+                                                              .read<
+                                                                  BookscreenInfoCubit>()
+                                                              .getInfo());
+                                                    },
                                                   ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  )
-                                                ] +
-                                                currentbook.metadata.tags
-                                                    .map((e) =>
-                                                        Chip(label: Text(e)))
-                                                    .toList())),
-                                Text(
-                                  currentbook.metadata.summary,
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                ),
+                                                  Divider(),
+                                                ],
+                                              );
+                                            } else {
+                                              return SizedBox.shrink();
+                                            }
+                                          },
+                                        ),
+                                        // SizedBox(
+                                        //   height: 10,
+                                        // ),
+                                        Text(
+                                          currentbook.metadata.title,
+                                          style: TextStyle(fontSize: 10.sp),
+                                        ),
+                                        // SizedBox(
+                                        //   height: 9,
+                                        // ),
+                                        Text(
+                                          '#' + currentbook.metadata.number,
+                                          style: TextStyle(fontSize: 9.sp),
+                                        ),
+                                        currentbook.metadata.releaseDate == null
+                                            ? SizedBox.shrink()
+                                            : Text(
+                                                (DateFormat('yMMMMd').format(
+                                                    currentbook.metadata
+                                                        .releaseDate!)),
+                                                style:
+                                                    TextStyle(fontSize: 9.sp),
+                                              ),
+                                      ],
+                                    ),
+                                  ),
+                                )
                               ],
                             ),
-                          ))
-                    ],
+                          ),
+                        ),
+                        Expanded(
+                            flex: 6,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  currentbook.metadata.tags.length == 0
+                                      ? SizedBox.shrink()
+                                      : SingleChildScrollView(
+                                          physics: ClampingScrollPhysics(),
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: <Widget>[
+                                                    Text(
+                                                      "TAGS",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .button,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    )
+                                                  ] +
+                                                  currentbook.metadata.tags
+                                                      .map((e) =>
+                                                          Chip(label: Text(e)))
+                                                      .toList())),
+                                  Text(
+                                    currentbook.metadata.summary,
+                                    style: TextStyle(fontSize: 9.sp),
+                                  ),
+                                ],
+                              ),
+                            ))
+                      ],
+                    ),
                   ),
                 ),
                 floatingActionButton: FloatingActionButton.extended(
@@ -262,30 +268,31 @@ class BookScreenImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Image cover = null != image
-        ? Image.memory(Uint8List.fromList(image!))
-        : Image.asset("assets/images/cover.png");
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: Container(
-            foregroundDecoration: currentbook.readProgress == null
-                ? const RotatedCornerDecoration(
-                    color: Colors.orange,
-                    geometry: const BadgeGeometry(
-                        width: 20, height: 20, cornerRadius: 0),
-                  )
-                : null,
-            child: cover,
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: Container(
+              foregroundDecoration: currentbook.readProgress == null
+                  ? const RotatedCornerDecoration(
+                      color: Colors.orange,
+                      geometry: const BadgeGeometry(
+                          width: 20, height: 20, cornerRadius: 0),
+                    )
+                  : null,
+              child: null != image
+                  ? Image.memory(
+                      Uint8List.fromList(image!),
+                      fit: BoxFit.contain,
+                    )
+                  : SizedBox.shrink(),
+            ),
           ),
-        ),
-        if (currentbook.readProgress != null &&
-            currentbook.readProgress?.completed != true)
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: ReadProgressBar(book: currentbook)),
-      ],
+          ReadProgressBar(book: currentbook)
+        ],
+      ),
     );
   }
 }
