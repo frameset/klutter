@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:klutter/business_logic/cubit/theme_cubit.dart';
 import 'package:klutter/data/dataproviders/client/api_client.dart';
 import 'package:klutter/presentation/screens/book_screen.dart';
@@ -8,10 +9,15 @@ import 'package:klutter/presentation/screens/library_screen.dart';
 import 'package:klutter/presentation/screens/reader.dart';
 import 'package:klutter/presentation/screens/series_screen.dart';
 import 'package:klutter/presentation/screens/server_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'presentation/screens/server_home.dart';
 import 'package:sizer/sizer.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  HydratedBloc.storage = await HydratedStorage.build(
+      storageDirectory: await getApplicationSupportDirectory());
+  // HydratedBloc.storage.clear();
   ApiClient();
   runApp(MyApp());
 }

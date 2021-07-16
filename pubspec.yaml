@@ -32,6 +32,7 @@ dependencies:
   flutter_launcher_icons: ^0.9.0
   flutter_secure_storage: ^4.2.0
   fullscreen: ^1.0.3
+  hydrated_bloc: ^7.0.1
   intl: ^0.17.0
   json_annotation: ^4.0.1
   path_provider: ^2.0.2
