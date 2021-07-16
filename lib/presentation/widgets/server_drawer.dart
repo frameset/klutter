@@ -6,6 +6,7 @@ import 'package:klutter/presentation/screens/library_screen.dart';
 import 'package:klutter/presentation/screens/server_home.dart';
 import 'package:klutter/presentation/screens/server_picker.dart';
 import 'package:klutter/presentation/widgets/klutter_drawer_header.dart';
+import 'package:klutter/presentation/widgets/select_theme_tile.dart';
 import 'klutter_about_list_tile.dart';
 
 class ServerDrawer extends StatefulWidget {
@@ -78,7 +79,8 @@ class _ServerDrawerState extends State<ServerDrawer> {
                   ServerPicker.routeName, (Route<dynamic> route) => false),
             ),
             Divider(),
-            KlutterAboutListTile()
+            KlutterAboutListTile(),
+            SelectThemeTile(),
           ],
         ),
       ),
