@@ -162,7 +162,7 @@ class _ReaderState extends State<Reader> {
                           children: [
                             Expanded(
                               child: Container(
-                                color: Theme.of(context).primaryColor,
+                                color: Theme.of(context).canvasColor,
                                 // decoration: ,
                                 child: Row(
                                   children: [
@@ -209,7 +209,7 @@ class _ReaderState extends State<Reader> {
                               flex: 10,
                               child: SizedBox.expand(
                                 child: Container(
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).canvasColor,
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -219,7 +219,6 @@ class _ReaderState extends State<Reader> {
                                           onPressed: () => context
                                               .read<ReaderBloc>()
                                               .add(ReaderGoPreviousBook())),
-                                      //Page slider goes here. (blocbuilder?)
                                       BlocBuilder<ReaderBloc, ReaderState>(
                                         builder: (context, state) {
                                           return Expanded(
