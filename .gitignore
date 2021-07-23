@@ -30,6 +30,7 @@
 .pub-cache/
 .pub/
 /build/
+/ios/build/
 
 # Generated dart files
 *.g.dart
