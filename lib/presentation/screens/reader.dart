@@ -88,14 +88,13 @@ class _ReaderState extends State<Reader> {
                           scaleController.scaleState =
                               PhotoViewScaleState.initial;
                           return PhotoView(
-                              scaleStateController: scaleController,
-
-                              // key: ValueKey<int>(state.pageNumber),
-                              initialScale: PhotoViewComputedScale.contained,
-                              minScale: PhotoViewComputedScale.contained,
-                              gaplessPlayback: true,
-                              enableRotation: false,
-                              imageProvider: MemoryImage(
+                            scaleStateController: scaleController,
+                            filterQuality: FilterQuality.high,
+                            initialScale: PhotoViewComputedScale.contained,
+                            minScale: PhotoViewComputedScale.contained,
+                            gaplessPlayback: true,
+                            enableRotation: false,
+                            imageProvider: MemoryImage(
                                   Uint8List.fromList(state.pageImage)));
                         } else {
                           return Center(
