@@ -140,7 +140,7 @@ class _AddServerDialogState extends State<AddServerDialog> {
                       )) {
                         return null;
                       } else {
-                        return "Please enter a valid email";
+                        return "URL not valid. Please include the protocol, e.g. https://komga.example.com";
                       }
                     }),
                 TextFormField(
@@ -154,7 +154,7 @@ class _AddServerDialogState extends State<AddServerDialog> {
                     if (isEmail(value!)) {
                       return null;
                     } else {
-                      return 'Server Name';
+                      return 'Enter your username, it should be a valid email address';
                     }
                   },
                 ),
@@ -167,7 +167,7 @@ class _AddServerDialogState extends State<AddServerDialog> {
                       hintText: 'Enter your password'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Server Name';
+                      return 'Enter your password';
                     }
                     return null;
                   },
