@@ -28,6 +28,7 @@ class ReaderBloc extends Bloc<ReaderEvent, ReaderState> {
       _readerRepository.updateReadPage(currentPage);
       _readerRepository.cacheAround(currentPage);
     } else if (event is ReaderGoToNextPage) {
+      yield ReaderLoading(currentPage);
       if (currentPage == book.media.pagesCount) {
         yield ReaderReachedEnd(await _readerRepository.getNextBook());
       } else {
