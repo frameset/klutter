@@ -24,6 +24,7 @@ class _ReaderState extends State<Reader> {
   int currentSliderValue = 2;
   PageThumbnailCubit? pageThumbnailCubit;
   late PhotoViewScaleStateController scaleController;
+  DismissDirection dismissDirection = DismissDirection.horizontal;
 
   @override
   void initState() {
@@ -123,7 +124,10 @@ class _ReaderState extends State<Reader> {
                               gaplessPlayback: true,
                               enableRotation: false,
                               imageProvider: MemoryImage(
-                                  Uint8List.fromList(state.pageImage)));
+                                Uint8List.fromList(state.pageImage),
+                              ),
+                            ),
+                          );
                         } else {
                           return Center(
                             child: Icon(
