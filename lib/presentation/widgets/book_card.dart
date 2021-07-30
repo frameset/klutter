@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:klutter/data/dataproviders/client/api_client.dart';
 import 'package:klutter/data/models/bookdto.dart';
@@ -41,12 +42,10 @@ class BookCard extends StatelessWidget {
                               width: 20, height: 20, cornerRadius: 0),
                         )
                       : null,
-                  child: FadeInImage(
-                    image: NetworkImage(
-                      thumburl,
-                      headers: header,
-                    ),
-                    placeholder: AssetImage("assets/images/cover.png"),
+                  child: CachedNetworkImage(
+                    fit: BoxFit.contain,
+                    imageUrl: thumburl,
+                    httpHeaders: header,
                   ),
                 ),
               ),
@@ -58,7 +57,7 @@ class BookCard extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
-                    '${book.metadata.title}',
+                    '${book.metadata.number} - ${book.metadata.title}',
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     softWrap: true,

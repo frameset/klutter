@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:klutter/data/dataproviders/client/api_client.dart';
 import 'package:klutter/data/models/collectiondto.dart';
@@ -25,12 +26,10 @@ class CollectionCard extends StatelessWidget {
           children: [
             Expanded(
               flex: 8,
-              child: FadeInImage(
-                image: NetworkImage(
-                  thumburl,
-                  headers: header,
-                ),
-                placeholder: AssetImage("assets/images/cover.png"),
+              child: CachedNetworkImage(
+                fit: BoxFit.contain,
+                imageUrl: thumburl,
+                httpHeaders: header,
               ),
             ),
             Expanded(

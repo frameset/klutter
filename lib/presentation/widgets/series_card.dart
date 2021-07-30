@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:klutter/data/dataproviders/client/api_client.dart';
 import 'package:klutter/data/models/seriesdto.dart';
@@ -35,13 +36,10 @@ class SeriesCard extends StatelessWidget {
                   children: <Widget>[
                     SizedBox(
                       height: 125.0,
-                      child: FadeInImage(
+                      child: CachedNetworkImage(
                         fit: BoxFit.contain,
-                        image: NetworkImage(
-                          thumburl,
-                          headers: header,
-                        ),
-                        placeholder: AssetImage("assets/images/cover.png"),
+                        imageUrl: thumburl,
+                        httpHeaders: header,
                       ),
                     ),
                     Positioned(

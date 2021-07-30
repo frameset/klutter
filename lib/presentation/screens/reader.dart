@@ -85,16 +85,44 @@ class _ReaderState extends State<Reader> {
                             color: Colors.red,
                           ));
                         } else if (state is ReaderPageReady) {
-                          scaleController.scaleState =
-                              PhotoViewScaleState.initial;
-                          return PhotoView(
-                            scaleStateController: scaleController,
-                            filterQuality: FilterQuality.high,
-                            initialScale: PhotoViewComputedScale.contained,
-                            minScale: PhotoViewComputedScale.contained,
-                            gaplessPlayback: true,
-                            enableRotation: false,
-                            imageProvider: MemoryImage(
+                          // scaleController.scaleState =
+                          //     PhotoViewScaleState.initial;
+                          return Dismissible(
+                            behavior: HitTestBehavior.translucent,
+                            key: ValueKey(state.pageNumber),
+                            direction: dismissDirection,
+                            onDismissed: (DismissDirection direction) {
+                              if (direction == DismissDirection.startToEnd) {
+                                context
+                                    .read<ReaderBloc>()
+                                    .add(ReaderGoToPrevPage());
+                              } else {
+                                context
+                                    .read<ReaderBloc>()
+                                    .add(ReaderGoToNextPage());
+                              }
+                            },
+                            resizeDuration: null,
+                            child: PhotoView(
+                              scaleStateChangedCallback: (scaleState) {
+                                print(scaleState);
+                                setState(() {
+                                  if (scaleState !=
+                                      PhotoViewScaleState.initial) {
+                                    dismissDirection = DismissDirection.none;
+                                  } else {
+                                    dismissDirection =
+                                        DismissDirection.horizontal;
+                                  }
+                                });
+                              },
+                              scaleStateController: scaleController,
+                              filterQuality: FilterQuality.high,
+                              initialScale: PhotoViewComputedScale.contained,
+                              minScale: PhotoViewComputedScale.contained,
+                              gaplessPlayback: true,
+                              enableRotation: false,
+                              imageProvider: MemoryImage(
                                   Uint8List.fromList(state.pageImage)));
                         } else {
                           return Center(
