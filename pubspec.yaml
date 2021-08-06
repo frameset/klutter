@@ -29,7 +29,7 @@ dependencies:
   dio_cache_interceptor: ^3.0.0
   dio_cache_interceptor_hive_store: ^3.0.1
   equatable: ^2.0.3
-  flutter_bloc: ^7.0.1
+  flutter_bloc: ^7.1.0
   flutter_launcher_icons: ^0.9.0
   flutter_secure_storage: ^4.2.0
   fullscreen: ^1.0.3
@@ -37,7 +37,7 @@ dependencies:
   intl: ^0.17.0
   json_annotation: ^4.0.1
   path_provider: ^2.0.2
-  photo_view: ^0.11.1
+  photo_view: ^0.12.0
   pretty_dio_logger: ^1.1.1
   retrofit: ^2.0.0
   rotated_corner_decoration: ^2.0.0
