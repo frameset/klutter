@@ -143,36 +143,41 @@ class _AddServerDialogState extends State<AddServerDialog> {
                         return "URL not valid. Please include the protocol, e.g. https://komga.example.com";
                       }
                     }),
-                TextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  onChanged: (value) => username = value,
-                  decoration: InputDecoration(
-                      icon: Icon(Icons.person),
-                      labelText: 'Username',
-                      hintText: 'Enter your username'),
-                  validator: (value) {
-                    if (isEmail(value!)) {
+                AutofillGroup(
+                    child: Column(children: [
+                  TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    autofillHints: [AutofillHints.username],
+                    onChanged: (value) => username = value,
+                    decoration: InputDecoration(
+                        icon: Icon(Icons.person),
+                        labelText: 'Username',
+                        hintText: 'Enter your username'),
+                    validator: (value) {
+                      if (isEmail(value!)) {
+                        return null;
+                      } else {
+                        return 'Enter your username, it should be a valid email address';
+                      }
+                    },
+                  ),
+                  TextFormField(
+                    onChanged: (value) => password = value,
+                    autofillHints: [AutofillHints.password],
+                    keyboardType: TextInputType.visiblePassword,
+                    decoration: InputDecoration(
+                        icon: Icon(Icons.password),
+                        labelText: 'Password',
+                        hintText: 'Enter your password'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Enter your password';
+                      }
                       return null;
-                    } else {
-                      return 'Enter your username, it should be a valid email address';
-                    }
-                  },
-                ),
-                TextFormField(
-                  onChanged: (value) => password = value,
-                  keyboardType: TextInputType.visiblePassword,
-                  decoration: InputDecoration(
-                      icon: Icon(Icons.password),
-                      labelText: 'Password',
-                      hintText: 'Enter your password'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Enter your password';
-                    }
-                    return null;
-                  },
-                  obscureText: true,
-                ),
+                    },
+                    obscureText: true,
+                  )
+                ])),
                 SizedBox(
                   height: 20,
                 ),
