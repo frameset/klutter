@@ -11,7 +11,7 @@ class KlutterAboutListTile extends StatelessWidget {
       applicationLegalese: "Many thanks to gotson for creating Komga",
       applicationName: "Klutter",
       icon: Icon(Icons.help),
-      applicationVersion: "0.6.0",
+      applicationVersion: "0.7.0",
     );
   }
 }
