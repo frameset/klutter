@@ -21,7 +21,6 @@ This is a project in its early stages. There will be bugs, things may break. iOS
 * Readlists
 * Library view filtering
 * Caching to improve browsing speed
-* Availability on Play store
 
 ## Not planned for implementation
 
@@ -37,3 +36,7 @@ This is a project in its early stages. There will be bugs, things may break. iOS
 ## Community
 
 Discuss this project on the official [Komga discord](https://discord.gg/TdRpkDu) in the 3rd Party Apps channel
+
+## Download
+
+Available on the [Apple App Store](https://apps.apple.com/gb/app/klutter/id1577805246) and the [Google Play Store](https://play.google.com/store/apps/details?id=uk.winckle.klutter)
